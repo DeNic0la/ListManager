@@ -20,11 +20,12 @@ typedef struct Elm {
 } ListElement;
 
 /*
-	Those Things here
+	Prototypes
 */
 ListElement* createLinkedList(int listSize);
 void fillData(DataElement* toFill);
 void deleteList(ListElement* pToDelete);
+void printList(ListElement* firstElement, int ElementsToPrintPerIteration);
 
 
 /*
@@ -32,7 +33,10 @@ void deleteList(ListElement* pToDelete);
 	@autor --
 */
 int main() {
-	
+	ListElement* List = createLinkedList(30);
+	printList(List, -1);
+	deleteList(List);
+	printList(List,-1);
 }
 
 /*
@@ -73,5 +77,19 @@ void deleteList(ListElement* pToDelete) {
 		pTemporary = pToDelete->pNext;
 		free(pToDelete->pData);
 		free(pToDelete);
+	}
+}
+
+void printList(ListElement* firstElement, int ElementsToPrintPerIteration) {
+	bool exit = false;
+	while (!exit)
+	{
+		for (int i = 1; i != ElementsToPrintPerIteration && firstElement != NULL; i++,firstElement++)
+		{
+			DataElement* data = firstElement->pData;
+			double preis = data->Preis;
+			printf("Data: %lf\n", preis);
+		}
+		exit = true;
 	}
 }
