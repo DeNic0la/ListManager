@@ -26,6 +26,7 @@ ListElement* createLinkedList(int listSize);
 void fillData(DataElement* toFill);
 void deleteList(ListElement* pToDelete);
 void printList(ListElement* firstElement, int ElementsToPrintPerIteration);
+bool isYes(char* inputstring);
 
 
 /*
@@ -33,10 +34,10 @@ void printList(ListElement* firstElement, int ElementsToPrintPerIteration);
     @autor --
 */
 int main() {
-    ListElement* List = createLinkedList(30);
-    printList(List, 100);
-    deleteList(List);
-    printList(List, -1);
+    ListElement* List = createLinkedList(9);
+    printList(List, 3);
+    /* deleteList(List);
+     printList(List, -1);*/
 }
 
 /*
@@ -81,17 +82,36 @@ void deleteList(ListElement* pToDelete) {
         free(pToDelete);
     }
 }
-
+/*
+    @autor Nicola
+*/
 void printList(ListElement* firstElement, int ElementsToPrintPerIteration) {
     bool exit = false;
     while (!exit)
     {
-    for (int i = 1; i != ElementsToPrintPerIteration && firstElement != NULL; i++, firstElement->pNext)
-    {
-        DataElement* data = firstElement->pData;
-        double preis = data->Preis;
-        printf("Data: %lf\n", preis);
+        for (int i = 0; i != ElementsToPrintPerIteration && firstElement->pNext != NULL; i++)
+        {
+            firstElement = firstElement->pNext;
+            DataElement* data = firstElement->pData;
+            double preis = data->Preis;
+            printf("Data: %lf\n", preis);
+        }
+        printf("Es wurden %i Elemente ausgegeben. Möchten sie eie weiter Iteration an Elementen ausgeben ? [Y/N]\n", ElementsToPrintPerIteration);
+        char result[10];
+        fgets(result, 10, stdin);
+        exit = !isYes(result);
     }
-    exit = true;
 }
+
+/*
+    @autor Nicola
+*/
+bool isYes(char* inputstring) {
+    if (*inputstring == 'Y' ||
+        *inputstring == 'J' ||
+        *inputstring == 'y' ||
+        *inputstring == 'j') {
+        return true;
+    }
+    return false;
 }
