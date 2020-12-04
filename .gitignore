@@ -338,3 +338,4 @@ ASALocalRun/
 
 # BeatPulse healthcheck temp database
 healthchecksdb
+enc_temp_folder/b0c8b0a453c4749ff942c6bd31bdfa/main.cpp
