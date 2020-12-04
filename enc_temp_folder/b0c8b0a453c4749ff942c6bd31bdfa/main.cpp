@@ -45,6 +45,7 @@ int main() {
     The list is Built Back to Front
 */
 ListElement* createLinkedList(int listSize) {
+
     ListElement* pPreviousElement = NULL;
     for (int i = 0; i < listSize; i++) {
         //if (pList == NULL) { pList = pPreviousElement; }
