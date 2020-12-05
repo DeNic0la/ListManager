@@ -40,7 +40,7 @@ int main() {
         char userInput[50] = { "empty" };
         fgets(userInput, 50, stdin);
         if (strcmp(userInput, "help\n") == 0|| strcmp(userInput, "Help\n")==0) {
-            printf("Help Command Executed\n");
+            printf("Mögliche commands:\ncreateList - Erstellt eine Liste\nprintList - gibt die Liste aus\ndeleteList - Löscht die Liste\n");
         }
         else if (strcmp(userInput, "createList\n") ==0|| strcmp(userInput, "createList\n")==0) {
             if (pStartOfTheList != NULL) {
