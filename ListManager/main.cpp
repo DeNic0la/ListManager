@@ -34,10 +34,25 @@ bool isYes(char* inputstring);
     @autor --
 */
 int main() {
-    ListElement* List = createLinkedList(9);
-    printList(List, 3);
-    /* deleteList(List);
-     printList(List, -1);*/
+    printf("Das Programm List-Manager wurde gestartet. Fuer Hilfe benuetzen sie den Command 'help'\n");
+    ListElement* pStartOfTheList = NULL;
+    bool closeTheApplication = false;
+    while (!closeTheApplication) {
+        char userInput[50] = { "empty" };
+        fgets(userInput, 50, stdin);
+        if (strcmp(userInput, "help") || strcmp(userInput, "Help")) {
+            printf("Help Command Executed\n");
+        }
+        else if (strcmp(userInput, "createList") || strcmp(userInput, "createList")) {
+            if (pStartOfTheList == NULL) {
+                printf("Wie viele elemente soll die Liste haben ?\n");
+            }
+            else {
+                printf("Sie haben bereits eine erstellte Liste, moechten sie diese Löschen ?\n");
+            }
+            
+        }
+    }
 }
 
 /*
