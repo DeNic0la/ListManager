@@ -96,9 +96,17 @@ void printList(ListElement* firstElement, int ElementsToPrintPerIteration) {
             double preis = data->Preis;
             printf("Data: %lf\n", preis);
         }
-        printf("Es wurden %i Elemente ausgegeben. Möchten sie eie weiter Iteration an Elementen ausgeben ? [Y/N]\n", ElementsToPrintPerIteration);
-        char result[10];
-        fgets(result, 10, stdin);
+        char result[10] = {'N'};
+        if (firstElement->pNext == NULL) {
+            printf("Es Wurden alle Elemente der Liste ausgegeben. Klicken sie eine Belibige Taste um zum Menu zurueckzukehren\n");
+            system("pause");
+        }
+        else
+        {
+            printf("Es wurden %i Elemente ausgegeben. Möchten sie eie weiter Iteration an Elementen ausgeben ? [Y/N]\n", ElementsToPrintPerIteration);
+            fgets(result, 10, stdin);
+        }
+        
         exit = !isYes(result);
     }
 }
