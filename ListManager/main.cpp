@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-
 /*
     @autor Nicola
 */
@@ -34,10 +33,53 @@ bool isYes(char* inputstring);
     @autor --
 */
 int main() {
-    ListElement* List = createLinkedList(9);
-    printList(List, 3);
-    /* deleteList(List);
-     printList(List, -1);*/
+    printf("Das Programm List-Manager wurde gestartet. Fuer Hilfe benuetzen sie den Command 'help'\n");
+    ListElement* pStartOfTheList = NULL;
+    bool closeTheApplication = false;
+    while (!closeTheApplication) {
+        char userInput[50] = { "empty" };
+        fgets(userInput, 50, stdin);
+        if (strcmp(userInput, "help\n") == 0|| strcmp(userInput, "Help\n")==0) {
+            printf("Mögliche commands:\ncreateList - Erstellt eine Liste\nprintList - gibt die Liste aus\ndeleteList - Löscht die Liste\n");
+        }
+        else if (strcmp(userInput, "createList\n") ==0|| strcmp(userInput, "createList\n")==0) {
+            if (pStartOfTheList != NULL) {
+                printf("Sie haben bereits eine erstellte Liste, moechten sie diese Loeschen [Y/N] ?\n");
+                char delListAnswer[50] = { "empty" };
+                fgets(delListAnswer, 50, stdin);
+                if (isYes) {
+                    deleteList(pStartOfTheList);
+                    printf("Liste wurde gelöscht");
+                }
+                else {
+                    printf("Rückkehr zum Menu");
+                    continue;
+                }
+            }           
+            
+            int anzahlElementeDerListe = 0;
+            while (anzahlElementeDerListe <= 0) {
+                printf("Wie viele elemente soll die Liste haben ?\n");
+                scanf_s("%d", &anzahlElementeDerListe);
+            }
+            pStartOfTheList = createLinkedList(anzahlElementeDerListe);
+            printf("Liste wurde erstellt.\n");
+            continue;           
+            
+        }
+        else if (strcmp(userInput, "printList\n")==0 || strcmp(userInput, "printList\n")==0) {
+            int elementeProIteration = 0;
+            while (elementeProIteration != -1 || elementeProIteration > 0) {
+                printf("Wie viele Elemente sollen auf einmal ausgegeben werden ? [-1 = alle] \n");
+                scanf_s("%d", &elementeProIteration);
+            }
+            printList(pStartOfTheList, elementeProIteration);
+            continue;
+        }
+        else if (strcmp(userInput, "exit\n") == 0 || strcmp(userInput, "Exit\n") == 0) {
+            return 0;
+        }
+    }
 }
 
 /*
