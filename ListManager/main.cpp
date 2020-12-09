@@ -40,7 +40,7 @@ int main() {
         char userInput[50] = { "empty" };
         fgets(userInput, 50, stdin);
         if (strcmp(userInput, "help\n") == 0|| strcmp(userInput, "Help\n")==0) {
-            printf("Mögliche commands:\ncreateList - Erstellt eine Liste\nprintList - gibt die Liste aus\ndeleteList - Löscht die Liste\n");
+            printf("Mögliche commands:\ncreateList - Erstellt eine Liste\nprintList - gibt die Liste aus\ndeleteList - Loescht die Liste\nexit - Beendet die Applikation\n");
         }
         else if (strcmp(userInput, "createList\n") ==0|| strcmp(userInput, "createList\n")==0) {
             if (pStartOfTheList != NULL) {
@@ -49,7 +49,7 @@ int main() {
                 fgets(delListAnswer, 50, stdin);
                 if (isYes) {
                     deleteList(pStartOfTheList);
-                    printf("Liste wurde gelöscht");
+                    printf("Liste wurde geloescht");
                 }
                 else {
                     printf("Rückkehr zum Menu");
@@ -68,12 +68,25 @@ int main() {
             
         }
         else if (strcmp(userInput, "printList\n")==0 || strcmp(userInput, "printList\n")==0) {
+            if (pStartOfTheList == NULL) {
+                printf("Keine liste vorhanden.\n");
+                continue;
+            }
             int elementeProIteration = 0;
-            while (elementeProIteration != -1 || elementeProIteration > 0) {
+            while (!(elementeProIteration == -1 || elementeProIteration > 0)) {
                 printf("Wie viele Elemente sollen auf einmal ausgegeben werden ? [-1 = alle] \n");
                 scanf_s("%d", &elementeProIteration);
             }
             printList(pStartOfTheList, elementeProIteration);
+            continue;
+        }
+        else if (strcmp(userInput, "deleteList\n") == 0 || strcmp(userInput, "DeleteList\n") == 0) {
+            if (pStartOfTheList == NULL) {
+                printf("Keine liste vorhanden.\n");
+                continue;
+            }
+            deleteList(pStartOfTheList);
+            printf("Liste wurde geloescht.\n");
             continue;
         }
         else if (strcmp(userInput, "exit\n") == 0 || strcmp(userInput, "Exit\n") == 0) {
