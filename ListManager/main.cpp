@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
+#include <math.h>
 
 /*
     @autor Nicola
@@ -117,11 +119,30 @@ ListElement* createLinkedList(int listSize) {
 }
 
 /*
-    TODO
+    @Autor Laurin
+	kinda necessary
+*/
+int generateRandomInt(int min, int max) {
+ 	return (rand() % (max - min + 1)) + min;
+}
+
+
+/*
+	@Autor Laurin
 */
 void fillData(DataElement* toFill) {
-    strcpy_s(toFill->Bez, "THIS IS STILL HARDCODED");
-    toFill->Preis = 420.69;
+	char bezArray[4];
+
+	for (int i = 0; i < 3; i++)
+	{
+		char c = generateRandomInt(65, 90);
+		bezArray[i] = c;
+	}
+
+	bezArray[3] = '\0';
+
+	strcpy_s(toFill->Bez, bezArray);
+    toFill->Preis = generateRandomInt(100, 10000) / 10.0;
 }
 
 /*
@@ -144,13 +165,19 @@ void printList(ListElement* firstElement, int ElementsToPrintPerIteration) {
     bool exit = false;
     while (!exit)
     {
+        printf("Daten werden Ausgegeben:\n");
+        printf("| ### Bez ### | ### Nummer ### |\n");
+        printf("|-------------|----------------|\n");
         for (int i = 0; i != ElementsToPrintPerIteration && firstElement->pNext != NULL; i++)
         {
             firstElement = firstElement->pNext;
             DataElement* data = firstElement->pData;
-            double preis = data->Preis;
-            printf("Data: %lf\n", preis);
+            //This Line is Preferences:
+            //printf("|-------------|----------------|\n");// This line can be Comment or code, visual changes only
+            printf("|     %3s     |     %04.1f      |\n", data->Bez, data->Preis);
+            //printf("%s: %04.1f\n", data->Bez, preis);
         }
+        printf("|-------------|----------------|\n");
         char result[10] = {'N'};
         if (firstElement->pNext == NULL) {
             printf("Es Wurden alle Elemente der Liste ausgegeben. Klicken sie eine Belibige Taste um zum Menu zurueckzukehren\n");
