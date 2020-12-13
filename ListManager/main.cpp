@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
+#include <math.h>
 
 /*
     @autor Nicola
@@ -117,11 +119,41 @@ ListElement* createLinkedList(int listSize) {
 }
 
 /*
-    TODO
+    @Autor Laurin
+	kinda necessary
+*/
+int generateRandomInt(int min, int max) {
+ 	return (rand() % (max - min + 1)) + min;
+}
+
+/*
+	@Autor Laurin
+*/
+double randomDouble()
+{
+	double randDouble;
+
+	randDouble = (double)rand() / ((double)RAND_MAX + 1);
+	return (10.0 + randDouble * (1000.0 - 10.0));
+}
+
+/*
+	@Autor Laurin
 */
 void fillData(DataElement* toFill) {
-    strcpy_s(toFill->Bez, "THIS IS STILL HARDCODED");
-    toFill->Preis = 420.69;
+	char bezArray[4];
+	double randomDouble = (double)rand() / RAND_MAX * 2.0 - 1.0;
+
+	for (int i = 0; i < 3; i++)
+	{
+		char c = generateRandomInt(65, 90);
+		bezArray[i] = c;
+	}
+
+	bezArray[3] = '\0';
+
+	strcpy_s(toFill->Bez, bezArray);
+	toFill->Preis = randomDouble();
 }
 
 /*
@@ -149,7 +181,7 @@ void printList(ListElement* firstElement, int ElementsToPrintPerIteration) {
             firstElement = firstElement->pNext;
             DataElement* data = firstElement->pData;
             double preis = data->Preis;
-            printf("Data: %lf\n", preis);
+            printf("Data: %s: %lf\n", data->Bez, preis);
         }
         char result[10] = {'N'};
         if (firstElement->pNext == NULL) {
