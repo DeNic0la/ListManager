@@ -142,7 +142,6 @@ double randomDouble()
 */
 void fillData(DataElement* toFill) {
 	char bezArray[4];
-	double randomDouble = (double)rand() / RAND_MAX * 2.0 - 1.0;
 
 	for (int i = 0; i < 3; i++)
 	{
