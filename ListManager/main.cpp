@@ -28,6 +28,8 @@ void fillData(DataElement* toFill);
 void deleteList(ListElement* pToDelete);
 void printList(ListElement* firstElement, int ElementsToPrintPerIteration);
 bool isYes(char* inputstring);
+int getIntFromUser(const char* messageToUser, bool allowNegative);
+
 
 
 /*
@@ -58,13 +60,8 @@ int main() {
                     continue;
                 }
             }           
-            
-            int anzahlElementeDerListe = 0;
-            while (anzahlElementeDerListe <= 0) {
-                printf("Wie viele elemente soll die Liste haben ?\n");
-                scanf_s("%d", &anzahlElementeDerListe);
-            }
-            pStartOfTheList = createLinkedList(anzahlElementeDerListe);
+                       
+            pStartOfTheList = createLinkedList(getIntFromUser("Wie viele elemente soll die Liste haben ?\n", false));
             printf("Liste wurde erstellt.\n");
             continue;           
             
@@ -73,13 +70,8 @@ int main() {
             if (pStartOfTheList == NULL) {
                 printf("Keine liste vorhanden.\n");
                 continue;
-            }
-            int elementeProIteration = 0;
-            while (!(elementeProIteration == -1 || elementeProIteration > 0)) {
-                printf("Wie viele Elemente sollen auf einmal ausgegeben werden ? [-1 = alle] \n");
-                scanf_s("%d", &elementeProIteration);
-            }
-            printList(pStartOfTheList, elementeProIteration);
+            }            
+            printList(pStartOfTheList, getIntFromUser("Wie viele Elemente sollen auf einmal ausgegeben werden ? [-1 = alle] \n", true));
             continue;
         }
         else if (strcmp(userInput, "deleteList\n") == 0 || strcmp(userInput, "DeleteList\n") == 0) {
@@ -142,7 +134,7 @@ void fillData(DataElement* toFill) {
 	bezArray[3] = '\0';
 
 	strcpy_s(toFill->Bez, bezArray);
-    toFill->Preis = generateRandomInt(100, 10000) / 10.0;
+    toFill->Preis = generateRandomInt(100, 9999) / 10.0;
 }
 
 /*
@@ -174,7 +166,7 @@ void printList(ListElement* firstElement, int ElementsToPrintPerIteration) {
             DataElement* data = firstElement->pData;
             //This Line is Preferences:
             //printf("|-------------|----------------|\n");// This line can be Comment or code, visual changes only
-            printf("|     %3s     |     %04.1f      |\n", data->Bez, data->Preis);
+            printf("|     %3s     |     %05.1f      |\n", data->Bez, data->Preis);
             //printf("%s: %04.1f\n", data->Bez, preis);
         }
         printf("|-------------|----------------|\n");
@@ -204,4 +196,20 @@ bool isYes(char* inputstring) {
         return true;
     }
     return false;
+}
+
+/*
+    @autor Nicola
+*/
+int getIntFromUser(const char* messageToUser, bool allowNegative) {
+    while (true) {
+        printf(messageToUser);
+        char input[100];
+        fgets(input, 100, stdin);
+        int userInt = atoi(input);
+        if (userInt != 0 && (allowNegative || userInt>0)) 
+            return userInt;
+        
+    }
+    
 }
