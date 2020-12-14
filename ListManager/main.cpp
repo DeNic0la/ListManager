@@ -66,7 +66,11 @@ int main() {
             continue;           
             
         }
-        else if (strcmp(userInput, "printList\n")==0 || strcmp(userInput, "printList\n")==0) {
+        else if (strcmp(userInput, "sortList\n") == 0 || strcmp(userInput, "SortList\n") == 0) {
+            printf("Mit welchem Algorythmus möchten sie die Liste sortieren ?(EnterAvailableSortingAlgorythms)\n");
+            //Start SortingManaging Function here
+        }
+        else if (strcmp(userInput, "printList\n")==0 || strcmp(userInput, "PrintList\n")==0) {
             if (pStartOfTheList == NULL) {
                 printf("Keine liste vorhanden.\n");
                 continue;
