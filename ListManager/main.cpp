@@ -41,8 +41,7 @@ bool N_MS_Compare(DataElement* a, DataElement* b, int SortType);
     @autor --
 */
 int main() {
-    int res = strcmp("CBA","ABC");
-    printf("Das Programm List-Manager wurde gestartet. Fuer Hilfe benuetzen sie den Command 'help'%i\n",res);
+    printf("Das Programm List-Manager wurde gestartet. Fuer Hilfe benuetzen sie den Command 'help'\n");
     ListElement* pStartOfTheList = NULL;
     bool closeTheApplication = false;
     while (!closeTheApplication) {
@@ -79,7 +78,11 @@ int main() {
             {
                 sort = getIntFromUser("Wie Soll sortiert werden ? \n1= Bez - A-Z\n2= Bez - Z-A\n3= Preis - Aufsteigend\n4= Preis - Absteigend\n", false);
             }
+            clock_t startZeit = clock();
             N_MS_SortList(&pStartOfTheList, sort);
+            clock_t endZeit = clock();
+            double dauer = ((double)endZeit - (double)startZeit) / (double)CLOCKS_PER_SEC;
+            printf("Die Sortierung ist beendet und dauerte %.5lf Sekunden\n", dauer);
 
         }
         else if (strcmp(userInput, "printList\n")==0 || strcmp(userInput, "PrintList\n")==0) {
