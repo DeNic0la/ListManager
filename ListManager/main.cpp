@@ -30,8 +30,9 @@ void printList(ListElement* firstElement, int ElementsToPrintPerIteration);
 bool isYes(char* inputstring);
 int getIntFromUser(const char* messageToUser, bool allowNegative);
 void N_MS_SortList(ListElement** firstElement, int SortType);
-void N_MS_Split(struct Node* source, struct Node** start, struct Node** mid);
-ListElement* N_MS_SortedMerge(ListElement* a, ListElement* B);
+void N_MS_Split(ListElement* source, ListElement** start, ListElement** mid);
+ListElement* N_MS_SortedMerge(ListElement* a, ListElement* B, int sortType);
+bool N_MS_Compare(DataElement* a, DataElement* b, int SortType);
 
 
 
@@ -54,7 +55,7 @@ int main() {
                 printf("Sie haben bereits eine erstellte Liste, moechten sie diese Loeschen [Y/N] ?\n");
                 char delListAnswer[50] = { "empty" };
                 fgets(delListAnswer, 50, stdin);
-                if (isYes) {
+                if (isYes(delListAnswer)) {
                     deleteList(pStartOfTheList);
                     printf("Liste wurde geloescht");
                 }
@@ -77,6 +78,7 @@ int main() {
             {
                 sort = getIntFromUser("Wie Soll sortiert werden ? \n1= Bez - Aufsteigend\n2= Bez - Absteigend\n3= Preis - Aufsteigend\n4= Preis - Absteigend\n", false);
             }
+            N_MS_SortList(&pStartOfTheList, sort);
 
         }
         else if (strcmp(userInput, "printList\n")==0 || strcmp(userInput, "PrintList\n")==0) {
@@ -231,7 +233,7 @@ int getIntFromUser(const char* messageToUser, bool allowNegative) {
 */
 void N_MS_SortList(ListElement** firstElement, int SortType) {
     /*
-    *   1= Bez - Aufsteigend
+        1= Bez - Aufsteigend
         2= Bez - Absteigend
         3= Preis - Aufsteigend
         4= Preis - Absteigend
@@ -246,19 +248,19 @@ void N_MS_SortList(ListElement** firstElement, int SortType) {
     N_MS_Split(head, &a, &b);
     
     /*Recursive sort*/
-    N_MS_SortList(&a);
-    N_MS_SortList(&a);
-    *firstElement = N_MS_SortedMerge(a,b);
+    N_MS_SortList(&a,SortType);
+    N_MS_SortList(&b,SortType);
+    *firstElement = N_MS_SortedMerge(a,b,SortType);
 }
 /*
     @autor Nicola
 */
-void N_MS_Split(struct Node* source,
-    struct Node** start, struct Node** mid) {
+void N_MS_Split(ListElement* source,
+    ListElement** start, ListElement** mid) {
     ListElement* fast;
     ListElement* slow;
     slow = source;
-    fast = source->next;
+    fast = source->pNext;
 
     while (fast != NULL) {
         fast = fast->pNext;
@@ -272,7 +274,55 @@ void N_MS_Split(struct Node* source,
     slow->pNext = NULL;
 }
 
-ListElement* N_MS_SortedMerge(ListElement* a, ListElement* B) {
+ListElement* N_MS_SortedMerge(ListElement* a, ListElement* b, int sortType) {
+    if (a == NULL)
+        return (b);
+    else if (b == NULL)
+        return (a);
+    ListElement* result = NULL;
+    /*
+        1= Bez - Aufsteigend
+        2= Bez - Absteigend
+        3= Preis - Aufsteigend
+        4= Preis - Absteigend
+    */
     
+    if (N_MS_Compare(a->pData, b->pData,sortType)) {
+        result = a;
+        result->pNext = N_MS_SortedMerge(a->pNext, b, sortType);
+    }
+    else
+    {
+        result = b;
+        result->pNext = N_MS_SortedMerge(b->pNext, a, sortType);
+    }
+
+    return result;
+}
+/*
+    @autor Nicola
+*/
+bool N_MS_Compare(DataElement* a, DataElement* b, int SortType) {
+    /*
+        1= Bez - Aufsteigend
+        2= Bez - Absteigend
+        3= Preis - Aufsteigend
+        4= Preis - Absteigend
+    */
+    switch (SortType)
+    {
+    case 1:// ist a Kleiner
+        return false;
+        break;
+    case 2: // ist b Kleiner
+        return false;
+        break;
+    case 3: // ist a Kleiner
+        return (a->Preis < b->Preis);
+        break;
+    case 4: // ist b Kleiner
+        return (a->Preis > b->Preis);
+        break;
+    }
 }
     
