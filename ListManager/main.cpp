@@ -69,6 +69,11 @@ int main() {
         else if (strcmp(userInput, "sortList\n") == 0 || strcmp(userInput, "SortList\n") == 0) {
             printf("Mit welchem Algorythmus möchten sie die Liste sortieren ?(EnterAvailableSortingAlgorythms)\n");
             //Start SortingManaging Function here
+            int sort = 0;
+            while (sort > 4 || sort < 1)
+            {
+                sort = getIntFromUser("Wie Soll sortiert werden ? \n1= Bez - Aufsteigend\n2= Bez - Absteigend\n3= Preis - Aufsteigend\n4= Preis - Absteigend\n", false);
+            }
         }
         else if (strcmp(userInput, "printList\n")==0 || strcmp(userInput, "PrintList\n")==0) {
             if (pStartOfTheList == NULL) {
@@ -171,7 +176,6 @@ void printList(ListElement* firstElement, int ElementsToPrintPerIteration) {
             //This Line is Preferences:
             //printf("|-------------|----------------|\n");// This line can be Comment or code, visual changes only
             printf("|     %3s     |     %05.1f      |\n", data->Bez, data->Preis);
-            //printf("%s: %04.1f\n", data->Bez, preis);
         }
         printf("|-------------|----------------|\n");
         char result[10] = {'N'};
