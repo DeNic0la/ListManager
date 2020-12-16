@@ -29,14 +29,11 @@ void deleteList(ListElement* pToDelete);
 void printList(ListElement* firstElement, int ElementsToPrintPerIteration);
 bool isYes(char* inputstring);
 int getIntFromUser(const char* messageToUser, bool allowNegative);
+void N_MS_SortList(ListElement** firstElement, int SortType);
 void N_MS_Split(ListElement* source, ListElement** start, ListElement** mid);
-ListElement* N_MS_SortedMerge(ListElement* a, ListElement* b, bool (*sortType) (DataElement*, DataElement*));
-void N_MS_SortList(ListElement** firstElement, bool (*sortType) (DataElement*, DataElement*));
-bool (*N_MS_Compare(int sortType))(DataElement*, DataElement*);
-bool N_MS_Comp_Bez_AZ(DataElement* a, DataElement* b);
-bool N_MS_Comp_Bez_ZA(DataElement* a, DataElement* b);
-bool N_MS_Comp_Bez_Abs(DataElement* a, DataElement* b);
-bool N_MS_Comp_Bez_Auf(DataElement* a, DataElement* b);
+ListElement* N_MS_SortedMerge(ListElement* a, ListElement* B, int sortType);
+bool N_MS_Compare(DataElement* a, DataElement* b, int SortType);
+
 
 
 /*
@@ -82,11 +79,8 @@ int main() {
             {
                 sort = getIntFromUser("Wie Soll sortiert werden ? \n1= Bez - A-Z\n2= Bez - Z-A\n3= Preis - Aufsteigend\n4= Preis - Absteigend\n", false);
             }
-            bool (*sortType) (DataElement*, DataElement*) = N_MS_Compare(sort);
-
             clock_t startZeit = clock();
-            
-            N_MS_SortList(&pStartOfTheList, sortType);
+            N_MS_SortList(&pStartOfTheList, sort);
             clock_t endZeit = clock();
             double dauer = ((double)endZeit - (double)startZeit) / (double)CLOCKS_PER_SEC;
             printf("Die Sortierung ist beendet und dauerte %.5lf Sekunden\n", dauer);
@@ -242,7 +236,7 @@ int getIntFromUser(const char* messageToUser, bool allowNegative) {
 /*
     @autor Nicola
 */
-void N_MS_SortList(ListElement** firstElement, bool (*sortType) (DataElement*, DataElement*)) {
+void N_MS_SortList(ListElement** firstElement, int SortType) {
 
     ListElement* head = *firstElement;
     if ((head == NULL) || (head->pNext == NULL)) {
@@ -254,9 +248,9 @@ void N_MS_SortList(ListElement** firstElement, bool (*sortType) (DataElement*, D
     N_MS_Split(head, &a, &b);
     
     /*Recursive sort*/
-    N_MS_SortList(&a,sortType);
-    N_MS_SortList(&b,sortType);
-    *firstElement = N_MS_SortedMerge(a,b,sortType);
+    N_MS_SortList(&a,SortType);
+    N_MS_SortList(&b,SortType);
+    *firstElement = N_MS_SortedMerge(a,b,SortType);
 }
 /*
     @autor Nicola
@@ -280,12 +274,12 @@ void N_MS_Split(ListElement* source,
     slow->pNext = NULL;
 }
 
-ListElement* N_MS_SortedMerge(ListElement* a, ListElement* b, bool (*sortType) (DataElement*, DataElement*)) {
+ListElement* N_MS_SortedMerge(ListElement* a, ListElement* b, int sortType) {
    
     ListElement* result = NULL;
   
 
-    if ((*sortType)(a->pData, b->pData)) {
+    if (N_MS_Compare(a->pData, b->pData, sortType)) {
         result = a;
         a = a->pNext;
     }
@@ -298,7 +292,7 @@ ListElement* N_MS_SortedMerge(ListElement* a, ListElement* b, bool (*sortType) (
 
     while (a != NULL && b!= NULL)
     {
-        if ((*sortType)(a->pData, b->pData)) {
+        if (N_MS_Compare(a->pData, b->pData, sortType)) {
             
             current->pNext = a;
             current = a;
@@ -321,40 +315,28 @@ ListElement* N_MS_SortedMerge(ListElement* a, ListElement* b, bool (*sortType) (
 /*
     @autor Nicola
 */
-bool (*N_MS_Compare(int sortType))(DataElement*, DataElement*) {
-//bool N_MS_Compare(int SortType) {
+bool N_MS_Compare(DataElement* a, DataElement* b, int SortType) {
     /*
         1= Bez - Aufsteigend
         2= Bez - Absteigend
         3= Preis - Aufsteigend
         4= Preis - Absteigend
     */
-    //bool (*CompareFunction) (DataElement*, DataElement*) 
-    switch (sortType)
+    switch (SortType)
     {
     case 1:// ist a Kleiner
-        return &N_MS_Comp_Bez_AZ;
+        return (strcmp(b->Bez, a->Bez) > 0);
         break;
     case 2: // ist b Kleiner
-        return &N_MS_Comp_Bez_ZA;
+        return (strcmp(a->Bez, b->Bez) > 0);
         break;
     case 3: // ist a Kleiner
-        return  &N_MS_Comp_Bez_Auf;
+        return (a->Preis < b->Preis);
         break;
     case 4: // ist b Kleiner
-        return &N_MS_Comp_Bez_Abs;
+        return (a->Preis > b->Preis);
         break;
     }
 }
-bool N_MS_Comp_Bez_AZ(DataElement* a, DataElement* b) {
-    return (strcmp(b->Bez, a->Bez) > 0);
-} 
-bool N_MS_Comp_Bez_ZA(DataElement* a, DataElement* b) {
-    return (strcmp(a->Bez, b->Bez) > 0);
-}
-bool N_MS_Comp_Bez_Auf(DataElement* a, DataElement* b) {
-    return (a->Preis < b->Preis);
-}
-bool N_MS_Comp_Bez_Abs(DataElement* a, DataElement* b) {
-    return (a->Preis > b->Preis);
-}
+
+    
