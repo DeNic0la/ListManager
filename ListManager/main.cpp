@@ -8,7 +8,7 @@
     @autor Nicola
 */
 typedef struct Data {
-    char Bez[5];
+    char Bez[4];
     double Preis;
 } DataElement;
 
@@ -29,11 +29,14 @@ void deleteList(ListElement* pToDelete);
 void printList(ListElement* firstElement, int ElementsToPrintPerIteration);
 bool isYes(char* inputstring);
 int getIntFromUser(const char* messageToUser, bool allowNegative);
-void N_MS_SortList(ListElement** firstElement, int SortType);
 void N_MS_Split(ListElement* source, ListElement** start, ListElement** mid);
-ListElement* N_MS_SortedMerge(ListElement* a, ListElement* B, int sortType);
-bool N_MS_Compare(DataElement* a, DataElement* b, int SortType);
-
+ListElement* N_MS_SortedMerge(ListElement* a, ListElement* b, bool (*sortType) (DataElement*, DataElement*));
+void N_MS_SortList(ListElement** firstElement, bool (*sortType) (DataElement*, DataElement*));
+bool (*N_MS_Compare(int sortType))(DataElement*, DataElement*);
+bool N_MS_Comp_Bez_AZ(DataElement* a, DataElement* b);
+bool N_MS_Comp_Bez_ZA(DataElement* a, DataElement* b);
+bool N_MS_Comp_Bez_Abs(DataElement* a, DataElement* b);
+bool N_MS_Comp_Bez_Auf(DataElement* a, DataElement* b);
 
 
 /*
@@ -47,10 +50,11 @@ int main() {
     while (!closeTheApplication) {
         char userInput[50] = { "empty" };
         fgets(userInput, 50, stdin);
-        if (strcmp(userInput, "help\n") == 0|| strcmp(userInput, "Help\n")==0) {
-            printf("Mögliche commands:\ncreateList - Erstellt eine Liste\nprintList - gibt die Liste aus\ndeleteList - Loescht die Liste\nexit - Beendet die Applikation\n");
+        _strupr_s(userInput);
+        if (strstr(userInput,"HELP")) {
+            printf("Moegliche commands:\ncreateList - Erstellt eine Liste\nprintList - gibt die Liste aus\ndeleteList - Loescht die Liste\nexit - Beendet die Applikation\n");
         }
-        else if (strcmp(userInput, "createList\n") ==0|| strcmp(userInput, "createList\n")==0) {
+        else if (strstr(userInput, "CREATELIST")) {
             if (pStartOfTheList != NULL) {
                 printf("Sie haben bereits eine erstellte Liste, moechten sie diese Loeschen [Y/N] ?\n");
                 char delListAnswer[50] = { "empty" };
@@ -60,7 +64,7 @@ int main() {
                     printf("Liste wurde geloescht");
                 }
                 else {
-                    printf("Rückkehr zum Menu");
+                    printf("Rueckkehr zum Menu");
                     continue;
                 }
             }           
@@ -70,22 +74,25 @@ int main() {
             continue;           
             
         }
-        else if (strcmp(userInput, "sortList\n") == 0 || strcmp(userInput, "SortList\n") == 0) {
-            printf("Mit welchem Algorythmus möchten sie die Liste sortieren ?(EnterAvailableSortingAlgorythms)\n");
+        else if (strstr(userInput, "SORTLIST")) {
+            printf("Mit welchem Algorythmus moechten sie die Liste sortieren ?(EnterAvailableSortingAlgorythms)\n");
             //Start SortingManaging Function here
             int sort = 0;
             while (sort > 4 || sort < 1)
             {
                 sort = getIntFromUser("Wie Soll sortiert werden ? \n1= Bez - A-Z\n2= Bez - Z-A\n3= Preis - Aufsteigend\n4= Preis - Absteigend\n", false);
             }
+            bool (*sortType) (DataElement*, DataElement*) = N_MS_Compare(sort);
+
             clock_t startZeit = clock();
-            N_MS_SortList(&pStartOfTheList, sort);
+            
+            N_MS_SortList(&pStartOfTheList, sortType);
             clock_t endZeit = clock();
             double dauer = ((double)endZeit - (double)startZeit) / (double)CLOCKS_PER_SEC;
             printf("Die Sortierung ist beendet und dauerte %.5lf Sekunden\n", dauer);
 
         }
-        else if (strcmp(userInput, "printList\n")==0 || strcmp(userInput, "PrintList\n")==0) {
+        else if (strstr(userInput, "PRINTLIST")) {
             if (pStartOfTheList == NULL) {
                 printf("Keine liste vorhanden.\n");
                 continue;
@@ -93,16 +100,17 @@ int main() {
             printList(pStartOfTheList, getIntFromUser("Wie viele Elemente sollen auf einmal ausgegeben werden ? [-1 = alle] \n", true));
             continue;
         }
-        else if (strcmp(userInput, "deleteList\n") == 0 || strcmp(userInput, "DeleteList\n") == 0) {
+        else if (strstr(userInput, "DELETELIST")) {
             if (pStartOfTheList == NULL) {
                 printf("Keine liste vorhanden.\n");
                 continue;
             }
             deleteList(pStartOfTheList);
             printf("Liste wurde geloescht.\n");
+            pStartOfTheList = NULL;
             continue;
         }
-        else if (strcmp(userInput, "exit\n") == 0 || strcmp(userInput, "Exit\n") == 0) {
+        else if (strstr(userInput, "EXIT")) {
             return 0;
         }
     }
@@ -116,7 +124,6 @@ int main() {
 ListElement* createLinkedList(int listSize) {
     ListElement* pPreviousElement = NULL;
     for (int i = 0; i < listSize; i++) {
-        //if (pList == NULL) { pList = pPreviousElement; }
         ListElement* pListElement = (ListElement*)malloc(sizeof(ListElement));
         DataElement* pDataElement = (DataElement*)malloc(sizeof(DataElement));
         if (pListElement == NULL || pDataElement == NULL) return NULL;
@@ -235,7 +242,7 @@ int getIntFromUser(const char* messageToUser, bool allowNegative) {
 /*
     @autor Nicola
 */
-void N_MS_SortList(ListElement** firstElement, int SortType) {
+void N_MS_SortList(ListElement** firstElement, bool (*sortType) (DataElement*, DataElement*)) {
 
     ListElement* head = *firstElement;
     if ((head == NULL) || (head->pNext == NULL)) {
@@ -247,9 +254,9 @@ void N_MS_SortList(ListElement** firstElement, int SortType) {
     N_MS_Split(head, &a, &b);
     
     /*Recursive sort*/
-    N_MS_SortList(&a,SortType);
-    N_MS_SortList(&b,SortType);
-    *firstElement = N_MS_SortedMerge(a,b,SortType);
+    N_MS_SortList(&a,sortType);
+    N_MS_SortList(&b,sortType);
+    *firstElement = N_MS_SortedMerge(a,b,sortType);
 }
 /*
     @autor Nicola
@@ -273,49 +280,81 @@ void N_MS_Split(ListElement* source,
     slow->pNext = NULL;
 }
 
-ListElement* N_MS_SortedMerge(ListElement* a, ListElement* b, int sortType) {
-    if (a == NULL)
-        return (b);
-    else if (b == NULL)
-        return (a);
+ListElement* N_MS_SortedMerge(ListElement* a, ListElement* b, bool (*sortType) (DataElement*, DataElement*)) {
+   
     ListElement* result = NULL;
   
-    if (N_MS_Compare(a->pData, b->pData,sortType)) {
+
+    if ((*sortType)(a->pData, b->pData)) {
         result = a;
-        result->pNext = N_MS_SortedMerge(a->pNext, b, sortType);
+        a = a->pNext;
     }
     else
     {
         result = b;
-        result->pNext = N_MS_SortedMerge(b->pNext, a, sortType);
+        b = b->pNext;
     }
+    ListElement* current = result;
+
+    while (a != NULL && b!= NULL)
+    {
+        if ((*sortType)(a->pData, b->pData)) {
+            
+            current->pNext = a;
+            current = a;
+            a = a->pNext;
+        }
+        else
+        {
+            current->pNext = b;
+            current = b;
+            b = b->pNext;
+        }
+    }
+    if (a == NULL)
+        current->pNext = b;
+    else if (b == NULL)
+        current->pNext = a;
 
     return result;
 }
 /*
     @autor Nicola
 */
-bool N_MS_Compare(DataElement* a, DataElement* b, int SortType) {
+bool (*N_MS_Compare(int sortType))(DataElement*, DataElement*) {
+//bool N_MS_Compare(int SortType) {
     /*
         1= Bez - Aufsteigend
         2= Bez - Absteigend
         3= Preis - Aufsteigend
         4= Preis - Absteigend
     */
-    switch (SortType)
+    //bool (*CompareFunction) (DataElement*, DataElement*) 
+    switch (sortType)
     {
     case 1:// ist a Kleiner
-        return (strcmp(b->Bez, a->Bez) > 0);
+        return &N_MS_Comp_Bez_AZ;
         break;
     case 2: // ist b Kleiner
-        return (strcmp(a->Bez, b->Bez) > 0);
+        return &N_MS_Comp_Bez_ZA;
         break;
     case 3: // ist a Kleiner
-        return (a->Preis < b->Preis);
+        return  &N_MS_Comp_Bez_Auf;
         break;
     case 4: // ist b Kleiner
-        return (a->Preis > b->Preis);
+        return &N_MS_Comp_Bez_Abs;
         break;
     }
 }
-    
+bool N_MS_Comp_Bez_AZ(DataElement* a, DataElement* b) {
+    return (strcmp(b->Bez, a->Bez) > 0);
+} 
+bool N_MS_Comp_Bez_ZA(DataElement* a, DataElement* b) {
+    return (strcmp(a->Bez, b->Bez) > 0);
+}
+bool N_MS_Comp_Bez_Auf(DataElement* a, DataElement* b) {
+    return (a->Preis < b->Preis);
+}
+bool N_MS_Comp_Bez_Abs(DataElement* a, DataElement* b) {
+    return (a->Preis > b->Preis);
+}
