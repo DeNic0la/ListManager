@@ -8,7 +8,7 @@
     @autor Nicola
 */
 typedef struct Data {
-    char Bez[50];
+    char Bez[5];
     double Preis;
 } DataElement;
 
