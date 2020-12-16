@@ -41,7 +41,8 @@ bool N_MS_Compare(DataElement* a, DataElement* b, int SortType);
     @autor --
 */
 int main() {
-    printf("Das Programm List-Manager wurde gestartet. Fuer Hilfe benuetzen sie den Command 'help'\n");
+    int res = strcmp("CBA","ABC");
+    printf("Das Programm List-Manager wurde gestartet. Fuer Hilfe benuetzen sie den Command 'help'%i\n",res);
     ListElement* pStartOfTheList = NULL;
     bool closeTheApplication = false;
     while (!closeTheApplication) {
@@ -76,7 +77,7 @@ int main() {
             int sort = 0;
             while (sort > 4 || sort < 1)
             {
-                sort = getIntFromUser("Wie Soll sortiert werden ? \n1= Bez - Aufsteigend\n2= Bez - Absteigend\n3= Preis - Aufsteigend\n4= Preis - Absteigend\n", false);
+                sort = getIntFromUser("Wie Soll sortiert werden ? \n1= Bez - A-Z\n2= Bez - Z-A\n3= Preis - Aufsteigend\n4= Preis - Absteigend\n", false);
             }
             N_MS_SortList(&pStartOfTheList, sort);
 
@@ -232,12 +233,7 @@ int getIntFromUser(const char* messageToUser, bool allowNegative) {
     @autor Nicola
 */
 void N_MS_SortList(ListElement** firstElement, int SortType) {
-    /*
-        1= Bez - Aufsteigend
-        2= Bez - Absteigend
-        3= Preis - Aufsteigend
-        4= Preis - Absteigend
-    */
+
     ListElement* head = *firstElement;
     if ((head == NULL) || (head->pNext == NULL)) {
         return;
@@ -280,13 +276,7 @@ ListElement* N_MS_SortedMerge(ListElement* a, ListElement* b, int sortType) {
     else if (b == NULL)
         return (a);
     ListElement* result = NULL;
-    /*
-        1= Bez - Aufsteigend
-        2= Bez - Absteigend
-        3= Preis - Aufsteigend
-        4= Preis - Absteigend
-    */
-    
+  
     if (N_MS_Compare(a->pData, b->pData,sortType)) {
         result = a;
         result->pNext = N_MS_SortedMerge(a->pNext, b, sortType);
@@ -312,10 +302,10 @@ bool N_MS_Compare(DataElement* a, DataElement* b, int SortType) {
     switch (SortType)
     {
     case 1:// ist a Kleiner
-        return false;
+        return (strcmp(b->Bez, a->Bez) > 0);
         break;
     case 2: // ist b Kleiner
-        return false;
+        return (strcmp(a->Bez, b->Bez) > 0);
         break;
     case 3: // ist a Kleiner
         return (a->Preis < b->Preis);
