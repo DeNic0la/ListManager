@@ -33,6 +33,7 @@ void N_MS_SortList(ListElement** firstElement, int SortType);
 void N_MS_Split(ListElement* source, ListElement** start, ListElement** mid);
 ListElement* N_MS_SortedMerge(ListElement* a, ListElement* B, int sortType);
 bool N_MS_Compare(DataElement* a, DataElement* b, int SortType);
+int getShiftedChar(char* pStart);
 
 
 
@@ -48,7 +49,7 @@ int main() {
         char userInput[50] = { "empty" };
         fgets(userInput, 50, stdin);
         _strupr_s(userInput);
-        if (strstr(userInput,"HELP")) {
+        if (strstr(userInput, "HELP")) {
             printf("Moegliche commands:\ncreateList - Erstellt eine Liste\nprintList - gibt die Liste aus\ndeleteList - Loescht die Liste\nexit - Beendet die Applikation\n");
         }
         else if (strstr(userInput, "CREATELIST")) {
@@ -64,12 +65,12 @@ int main() {
                     printf("Rueckkehr zum Menu");
                     continue;
                 }
-            }           
-                       
+            }
+
             pStartOfTheList = createLinkedList(getIntFromUser("Wie viele elemente soll die Liste haben ?\n", false));
             printf("Liste wurde erstellt.\n");
-            continue;           
-            
+            continue;
+
         }
         else if (strstr(userInput, "SORTLIST")) {
             printf("Mit welchem Algorythmus moechten sie die Liste sortieren ?(EnterAvailableSortingAlgorythms)\n");
@@ -90,7 +91,7 @@ int main() {
             if (pStartOfTheList == NULL) {
                 printf("Keine liste vorhanden.\n");
                 continue;
-            }            
+            }
             printList(pStartOfTheList, getIntFromUser("Wie viele Elemente sollen auf einmal ausgegeben werden ? [-1 = alle] \n", true));
             continue;
         }
@@ -125,40 +126,39 @@ ListElement* createLinkedList(int listSize) {
         pListElement->pData = pDataElement;
         pListElement->pNext = pPreviousElement;
         pPreviousElement = pListElement;
-
     }
     return pPreviousElement;
 }
 
 /*
     @Autor Laurin
-	kinda necessary
+    kinda necessary
 */
 int generateRandomInt(int min, int max) {
- 	return (rand() % (max - min + 1)) + min;
+    return (rand() % (max - min + 1)) + min;
 }
 
 
 /*
-	@Autor Laurin
+    @Autor Laurin
 */
 void fillData(DataElement* toFill) {
-	char bezArray[4];
+    char bezArray[4];
 
-	for (int i = 0; i < 3; i++)
-	{
-		char c = generateRandomInt(65, 90);
-		bezArray[i] = c;
-	}
+    for (int i = 0; i < 3; i++)
+    {
+        char c = generateRandomInt(65, 90);
+        bezArray[i] = c;
+    }
 
-	bezArray[3] = '\0';
+    bezArray[3] = '\0';
 
-	strcpy_s(toFill->Bez, bezArray);
+    strcpy_s(toFill->Bez, bezArray);
     toFill->Preis = generateRandomInt(100, 9999) / 10.0;
 }
 
 /*
-    @Autor Nicola
+    @Autor Laurin
     Antoher one of The 5 Core Functionalty Functions
 */
 void deleteList(ListElement* pToDelete) {
@@ -189,7 +189,7 @@ void printList(ListElement* firstElement, int ElementsToPrintPerIteration) {
             printf("|     %3s     |     %05.1f      |\n", data->Bez, data->Preis);
         }
         printf("|-------------|----------------|\n");
-        char result[10] = {'N'};
+        char result[10] = { 'N' };
         if (firstElement->pNext == NULL) {
             printf("Es Wurden alle Elemente der Liste ausgegeben. Klicken sie eine Belibige Taste um zum Menu zurueckzukehren\n");
             system("pause");
@@ -199,13 +199,13 @@ void printList(ListElement* firstElement, int ElementsToPrintPerIteration) {
             printf("Es wurden %i Elemente ausgegeben. Möchten sie eie weiter Iteration an Elementen ausgeben ? [Y/N]\n", ElementsToPrintPerIteration);
             fgets(result, 10, stdin);
         }
-        
+
         exit = !isYes(result);
     }
 }
 
 /*
-    @autor Nicola
+    @autor Laurin
 */
 bool isYes(char* inputstring) {
     if (*inputstring == 'Y' ||
@@ -218,7 +218,7 @@ bool isYes(char* inputstring) {
 }
 
 /*
-    @autor Nicola
+    @autor Laurin
 */
 int getIntFromUser(const char* messageToUser, bool allowNegative) {
     while (true) {
@@ -226,11 +226,11 @@ int getIntFromUser(const char* messageToUser, bool allowNegative) {
         char input[100];
         fgets(input, 100, stdin);
         int userInt = atoi(input);
-        if (userInt != 0 && (allowNegative || userInt>0)) 
+        if (userInt != 0 && (allowNegative || userInt > 0))
             return userInt;
-        
+
     }
-    
+
 }
 
 /*
@@ -246,11 +246,11 @@ void N_MS_SortList(ListElement** firstElement, int SortType) {
     ListElement* a;
     ListElement* b;
     N_MS_Split(head, &a, &b);
-    
+
     /*Recursive sort*/
-    N_MS_SortList(&a,SortType);
-    N_MS_SortList(&b,SortType);
-    *firstElement = N_MS_SortedMerge(a,b,SortType);
+    N_MS_SortList(&a, SortType);
+    N_MS_SortList(&b, SortType);
+    *firstElement = N_MS_SortedMerge(a, b, SortType);
 }
 /*
     @autor Nicola
@@ -275,9 +275,9 @@ void N_MS_Split(ListElement* source,
 }
 
 ListElement* N_MS_SortedMerge(ListElement* a, ListElement* b, int sortType) {
-   
+
     ListElement* result = NULL;
-  
+
 
     if (N_MS_Compare(a->pData, b->pData, sortType)) {
         result = a;
@@ -290,10 +290,10 @@ ListElement* N_MS_SortedMerge(ListElement* a, ListElement* b, int sortType) {
     }
     ListElement* current = result;
 
-    while (a != NULL && b!= NULL)
+    while (a != NULL && b != NULL)
     {
         if (N_MS_Compare(a->pData, b->pData, sortType)) {
-            
+
             current->pNext = a;
             current = a;
             a = a->pNext;
@@ -325,9 +325,11 @@ bool N_MS_Compare(DataElement* a, DataElement* b, int SortType) {
     switch (SortType)
     {
     case 1:// ist a Kleiner
+        //return (getShiftedChar(a->Bez) > getShiftedChar(b->Bez));
         return (strcmp(b->Bez, a->Bez) > 0);
         break;
     case 2: // ist b Kleiner
+        //return (getShiftedChar(a->Bez) > getShiftedChar(b->Bez));
         return (strcmp(a->Bez, b->Bez) > 0);
         break;
     case 3: // ist a Kleiner
@@ -339,4 +341,8 @@ bool N_MS_Compare(DataElement* a, DataElement* b, int SortType) {
     }
 }
 
-    
+int getShiftedChar(char* pStart) {
+    const int charSize = sizeof(char);
+    return ((*pStart) << (charSize + charSize)) + (*(pStart + 1) << charSize) + (*(pStart + 2));
+}
+
