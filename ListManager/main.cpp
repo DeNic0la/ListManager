@@ -325,12 +325,12 @@ bool N_MS_Compare(DataElement* a, DataElement* b, int SortType) {
     switch (SortType)
     {
     case 1:// ist a Kleiner
-        //return (getShiftedChar(a->Bez) > getShiftedChar(b->Bez));
-        return (strcmp(b->Bez, a->Bez) > 0);
+        return (getShiftedChar(a->Bez) > getShiftedChar(b->Bez));
+        //return (strcmp(b->Bez, a->Bez) > 0);
         break;
     case 2: // ist b Kleiner
-        //return (getShiftedChar(a->Bez) > getShiftedChar(b->Bez));
-        return (strcmp(a->Bez, b->Bez) > 0);
+        return (getShiftedChar(a->Bez) > getShiftedChar(b->Bez));
+        //return (strcmp(a->Bez, b->Bez) > 0);
         break;
     case 3: // ist a Kleiner
         return (a->Preis < b->Preis);
@@ -342,7 +342,7 @@ bool N_MS_Compare(DataElement* a, DataElement* b, int SortType) {
 }
 
 int getShiftedChar(char* pStart) {
-    const int charSize = sizeof(char);
+    const unsigned int charSize = sizeof(char);
     return ((*pStart) << (charSize + charSize)) + (*(pStart + 1) << charSize) + (*(pStart + 2));
 }
 
