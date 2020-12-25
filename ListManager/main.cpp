@@ -19,6 +19,8 @@ typedef struct Data {
 typedef struct Elm {
     struct Elm* pNext;
     struct Data* pData;
+    // This may only be used for Quciksort
+    struct Elm* pLast;
 } ListElement;
 
 /*
@@ -127,6 +129,9 @@ ListElement* createLinkedList(int listSize) {
         fillData(pDataElement);
         pListElement->pData = pDataElement;
         pListElement->pNext = pPreviousElement;
+        if (pPreviousElement != NULL) {
+            pPreviousElement->pLast = pListElement;
+        }
         pPreviousElement = pListElement;
     }
     return pPreviousElement;
