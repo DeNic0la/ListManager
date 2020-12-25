@@ -9,6 +9,7 @@
 */
 typedef struct Data {
     char Bez[4];
+    int mapped;
     double Preis;
 } DataElement;
 
@@ -29,11 +30,11 @@ void deleteList(ListElement* pToDelete);
 void printList(ListElement* firstElement, int ElementsToPrintPerIteration);
 bool isYes(char* inputstring);
 int getIntFromUser(const char* messageToUser, bool allowNegative);
-void N_MS_SortList(ListElement** firstElement, int SortType);
+void N_MS_SortList(ListElement** firstElement);
 void N_MS_Split(ListElement* source, ListElement** start, ListElement** mid);
-ListElement* N_MS_SortedMerge(ListElement* a, ListElement* B, int sortType);
-bool N_MS_Compare(DataElement* a, DataElement* b, int SortType);
+ListElement* N_MS_SortedMerge(ListElement* a, ListElement* B);
 int getShiftedChar(char* pStart);
+void mapInt(ListElement* firstElement, int sortType);
 
 
 
@@ -79,9 +80,10 @@ int main() {
             while (sort > 4 || sort < 1)
             {
                 sort = getIntFromUser("Wie Soll sortiert werden ? \n1= Bez - A-Z\n2= Bez - Z-A\n3= Preis - Aufsteigend\n4= Preis - Absteigend\n", false);
-            }
+            }            
             clock_t startZeit = clock();
-            N_MS_SortList(&pStartOfTheList, sort);
+            mapInt(pStartOfTheList, sort);
+            N_MS_SortList(&pStartOfTheList);
             clock_t endZeit = clock();
             double dauer = ((double)endZeit - (double)startZeit) / (double)CLOCKS_PER_SEC;
             printf("Die Sortierung ist beendet und dauerte %.5lf Sekunden\n", dauer);
@@ -128,6 +130,54 @@ ListElement* createLinkedList(int listSize) {
         pPreviousElement = pListElement;
     }
     return pPreviousElement;
+}
+
+/*
+    @autor Nicola
+*/
+void mapInt(ListElement* firstElement, int sortType) { // TODO: Performance Test betwen - and ~
+   
+        switch (sortType)
+        {
+            /*
+            * SortType
+                1= Bez - A-Z
+                2= Bez - Z-A
+                3= Preis - Aufsteigend
+                4= Preis - Absteigend
+            */
+        case 1:
+            while (firstElement != NULL) {
+                DataElement * element = firstElement->pData;
+                element->mapped = -((element->Bez[0] << 16) + (element->Bez[1] << 8) + (element->Bez[2]));
+                firstElement = firstElement->pNext;
+            }
+            break;
+        case 2:
+            while (firstElement != NULL) {
+                DataElement* element = firstElement->pData;
+                element->mapped = (element->Bez[0] << 16) + (element->Bez[1] << 8) + (element->Bez[2]);
+                firstElement = firstElement->pNext;
+            }
+            break;
+        case 3:
+            while (firstElement != NULL) {
+                DataElement* element = firstElement->pData;
+                element->mapped = -((int)(element->Preis*10));
+                firstElement = firstElement->pNext;
+            }
+            break;
+        case 4:
+            while (firstElement != NULL) {
+                DataElement* element = firstElement->pData;
+                element->mapped = ((int)(element->Preis * 10));
+                firstElement = firstElement->pNext;
+            }
+            break;
+        default:
+            break;
+        }       
+    
 }
 
 /*
@@ -186,7 +236,9 @@ void printList(ListElement* firstElement, int ElementsToPrintPerIteration) {
             DataElement* data = firstElement->pData;
             //This Line is Preferences:
             //printf("|-------------|----------------|\n");// This line can be Comment or code, visual changes only
-            printf("|     %3s     |     %05.1f      |\n", data->Bez, data->Preis);
+            printf("|     %3s     |     %05.1f      |", data->Bez, data->Preis);
+            //printf("     %5i      |", data->mapped);// this line is for insight in the Mapped int
+            printf("\n");
         }
         printf("|-------------|----------------|\n");
         char result[10] = { 'N' };
@@ -236,7 +288,7 @@ int getIntFromUser(const char* messageToUser, bool allowNegative) {
 /*
     @autor Nicola
 */
-void N_MS_SortList(ListElement** firstElement, int SortType) {
+void N_MS_SortList(ListElement** firstElement) {
 
     ListElement* head = *firstElement;
     if ((head == NULL) || (head->pNext == NULL)) {
@@ -248,9 +300,9 @@ void N_MS_SortList(ListElement** firstElement, int SortType) {
     N_MS_Split(head, &a, &b);
 
     /*Recursive sort*/
-    N_MS_SortList(&a, SortType);
-    N_MS_SortList(&b, SortType);
-    *firstElement = N_MS_SortedMerge(a, b, SortType);
+    N_MS_SortList(&a);
+    N_MS_SortList(&b);
+    *firstElement = N_MS_SortedMerge(a, b);
 }
 /*
     @autor Nicola
@@ -274,12 +326,12 @@ void N_MS_Split(ListElement* source,
     slow->pNext = NULL;
 }
 
-ListElement* N_MS_SortedMerge(ListElement* a, ListElement* b, int sortType) {
+ListElement* N_MS_SortedMerge(ListElement* a, ListElement* b) {
 
     ListElement* result = NULL;
 
 
-    if (N_MS_Compare(a->pData, b->pData, sortType)) {
+    if (a->pData->mapped > b->pData->mapped) {
         result = a;
         a = a->pNext;
     }
@@ -292,7 +344,7 @@ ListElement* N_MS_SortedMerge(ListElement* a, ListElement* b, int sortType) {
 
     while (a != NULL && b != NULL)
     {
-        if (N_MS_Compare(a->pData, b->pData, sortType)) {
+        if (a->pData->mapped > b->pData->mapped) {
 
             current->pNext = a;
             current = a;
@@ -312,37 +364,3 @@ ListElement* N_MS_SortedMerge(ListElement* a, ListElement* b, int sortType) {
 
     return result;
 }
-/*
-    @autor Nicola
-*/
-bool N_MS_Compare(DataElement* a, DataElement* b, int SortType) {
-    /*
-        1= Bez - Aufsteigend
-        2= Bez - Absteigend
-        3= Preis - Aufsteigend
-        4= Preis - Absteigend
-    */
-    switch (SortType)
-    {
-    case 1:// ist a Kleiner
-        return (getShiftedChar(a->Bez) > getShiftedChar(b->Bez));
-        //return (strcmp(b->Bez, a->Bez) > 0);
-        break;
-    case 2: // ist b Kleiner
-        return (getShiftedChar(a->Bez) > getShiftedChar(b->Bez));
-        //return (strcmp(a->Bez, b->Bez) > 0);
-        break;
-    case 3: // ist a Kleiner
-        return (a->Preis < b->Preis);
-        break;
-    case 4: // ist b Kleiner
-        return (a->Preis > b->Preis);
-        break;
-    }
-}
-
-int getShiftedChar(char* pStart) {
-    const unsigned int charSize = sizeof(char);
-    return ((*pStart) << (charSize + charSize)) + (*(pStart + 1) << charSize) + (*(pStart + 2));
-}
-
