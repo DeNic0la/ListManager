@@ -62,10 +62,10 @@ int main() {
                 fgets(delListAnswer, 50, stdin);
                 if (isYes(delListAnswer)) {
                     deleteList(pStartOfTheList);
-                    printf("Liste wurde geloescht");
+                    printf("Liste wurde geloescht\n");
                 }
                 else {
-                    printf("Rueckkehr zum Menu");
+                    printf("Rueckkehr zum Menu\n");
                     continue;
                 }
             }
@@ -76,16 +76,26 @@ int main() {
 
         }
         else if (strstr(userInput, "SORTLIST")) {
-            printf("Mit welchem Algorythmus moechten sie die Liste sortieren ?(EnterAvailableSortingAlgorythms)\n");
-            //Start SortingManaging Function here
+            int algorythm = 0;
+            while (algorythm > 2 || algorythm < 1)
+            {
+                algorythm = getIntFromUser("Mit welchem Algorythmus moechten sie die Liste sortieren ?\n1 = Mergesort (Nicola)\n2 = Quicksort (Laurin)\n", false);
+            }
             int sort = 0;
             while (sort > 4 || sort < 1)
             {
-                sort = getIntFromUser("Wie Soll sortiert werden ? \n1= Bez - A-Z\n2= Bez - Z-A\n3= Preis - Aufsteigend\n4= Preis - Absteigend\n", false);
+                sort = getIntFromUser("Wie Soll sortiert werden ? \n1 = Bez - A-Z\n2 = Bez - Z-A\n3 = Preis - Aufsteigend\n4 = Preis - Absteigend\n", false);
             }            
             clock_t startZeit = clock();
             mapInt(pStartOfTheList, sort);
-            N_MS_SortList(&pStartOfTheList);
+            switch (algorythm) {
+            case 1:
+                N_MS_SortList(&pStartOfTheList);
+                break;
+            case 2:
+                printf("Hey Laurin du chasch do inne 1 Function call mache, lueg wie ich s bi Case 1 gmacht han und machs s done glich");
+                break;
+            }            
             clock_t endZeit = clock();
             double dauer = ((double)endZeit - (double)startZeit) / (double)CLOCKS_PER_SEC;
             printf("Die Sortierung ist beendet und dauerte %.5lf Sekunden\n", dauer);
