@@ -53,7 +53,7 @@ int main() {
         fgets(userInput, 50, stdin);
         _strupr_s(userInput);
         if (strstr(userInput, "HELP")) {
-            printf("Moegliche commands:\ncreateList - Erstellt eine Liste\nprintList - gibt die Liste aus\ndeleteList - Loescht die Liste\nexit - Beendet die Applikation\n");
+            printf("Moegliche commands:\ncreateList - Erstellt eine Liste\nprintList - gibt die Liste aus\ndeleteList - Loescht die Liste\nsortList - Sortiert den Inhalt der Liste\nexit - Beendet die Applikation\n");
         }
         else if (strstr(userInput, "CREATELIST")) {
             if (pStartOfTheList != NULL) {
