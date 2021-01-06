@@ -34,6 +34,7 @@ bool isYes(char* inputstring);
 int getIntFromUser(const char* messageToUser, bool allowNegative);
 void N_MS_SortList(ListElement** firstElement);
 void N_MS_Split(ListElement* source, ListElement** start, ListElement** mid);
+void L_QS_SortList(ListElement** firstElement);
 ListElement* N_MS_SortedMerge(ListElement* a, ListElement* B);
 int getShiftedChar(char* pStart);
 void mapInt(ListElement* firstElement, int sortType);
@@ -93,7 +94,7 @@ int main() {
                 N_MS_SortList(&pStartOfTheList);
                 break;
             case 2:
-                printf("Hey Laurin du chasch do inne 1 Function call mache, lueg wie ich s bi Case 1 gmacht han und machs s done glich");
+                L_QS_SortList(&pStartOfTheList);
                 break;
             }            
             clock_t endZeit = clock();
@@ -298,6 +299,61 @@ int getIntFromUser(const char* messageToUser, bool allowNegative) {
 
     }
 
+}
+
+/*
+    @autor Laurin
+*/
+void L_QS_Swap(int* a, int* b)
+{
+    //might performe worse + need to include cassert
+    //assert(a != NULL);
+    //assert(b != NULL);
+
+    int temp = *a;
+    *a = *b;
+    *b = temp;
+}
+
+/*
+    @autor Laurin
+*/
+int L_QS_Partition(int arr[], int low, int high)
+{
+    int pivot = arr[high];    // pivot 
+    int i = (low - 1);  // Index of smaller element 
+
+    for (int j = low; j <= high - 1; j++)
+    {
+        // If current element is smaller than the pivot 
+        if (arr[j] < pivot)
+        {
+            i++;    // increment index of smaller element 
+            L_QS_Swap(&arr[i], &arr[j]);
+        }
+    }
+    L_QS_Swap(&arr[i + 1], &arr[high]);
+    return (i + 1);
+}
+
+/*
+    @autor Laurin
+*/
+void  (ListElement** firstElement) {
+    ListElement* source = *firstElement;
+    int low = source;
+   
+    if (low < high)
+    {
+        /* pi is partitioning index, arr[p] is now
+           at right place */
+        int partition = L_QS_Partition(source, low, firstElement);
+
+        // Separately sort elements before 
+        // partition and after partition 
+        quickSort(arr, low, partition - 1);
+        quickSort(arr, partition + 1, high);
+    }
 }
 
 /*
