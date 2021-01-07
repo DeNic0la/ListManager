@@ -93,7 +93,7 @@ int main() {
                 N_MS_SortList(&pStartOfTheList);
                 break;
             case 2:
-                printf("Hey Laurin du chasch do inne 1 Function call mache, lueg wie ich s bi Case 1 gmacht han und machs s done glich");
+                L_QS_quickSort(pStartOfTheList);
                 break;
             }            
             clock_t endZeit = clock();
@@ -298,6 +298,84 @@ int getIntFromUser(const char* messageToUser, bool allowNegative) {
 
     }
 
+}
+
+/*
+    @autor Laurin
+*/
+int getIntFromUser(const char* messageToUser, bool allowNegative) {
+    while (true) {
+        printf(messageToUser);
+        char input[100];
+        fgets(input, 100, stdin);
+        int userInt = atoi(input);
+        if (userInt != 0 && (allowNegative || userInt > 0))
+            return userInt;
+
+    }
+
+}
+
+/*
+    @autor Laurin
+*/
+void L_QS_Swap(Data* a, Data* b)
+{
+    Data temp = *a;
+    *a = *b;
+    *b = temp;
+}
+
+/*
+    @autor Laurin
+*/
+ListElement* L_QS_LastELement(ListElement* root)
+{
+    while (root && root->pNext)
+        root = root->pNext;
+    return root;
+}
+
+/*
+    @autor Laurin
+*/
+ListElement* L_QS_Partition(ListElement* low, ListElement* high)
+{
+    Data* pivot = high->pData; 
+
+    ListElement* iteratror = low->pLast;
+
+    for (ListElement* j = low; j != high; j = j->pNext)
+    {
+        // If current element is smaller than the pivot 
+        if (j->pData <= pivot) 
+        {
+            iteratror = (iteratror == NULL) ? low : iteratror->pNext; 
+            L_QS_Swap(iteratror->pData, j->pData);
+        }
+    }
+    iteratror = (iteratror == NULL) ? low : iteratror->pNext;
+    L_QS_Swap(iteratror->pData, high->pData);
+    return iteratror;
+}
+
+/*
+    @autor Laurin
+*/
+void L_QS__quickSort(ListElement* low, ListElement* high)
+{
+    if (high != NULL && low != high && low != high->pNext)
+    {
+        ListElement* p = L_QS_Partition(low, high);
+        L_QS__quickSort(low, p->pLast);
+        L_QS__quickSort(p->pNext, high);
+    }
+}
+
+void L_QS_quickSort(ListElement* head) {
+    ListElement* h = L_QS_LastELement(head);
+
+    L_QS__quickSort(head, h);
 }
 
 /*
