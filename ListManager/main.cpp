@@ -232,6 +232,7 @@ void mapInt(ListElement* firstElement, int sortType) {
     @Autor Laurin
 */
 int generateRandomInt(int min, int max) {
+    //generate a random integer in range min - max
     return (rand() % (max - min + 1)) + min;
 }
 
@@ -240,6 +241,7 @@ int generateRandomInt(int min, int max) {
     @Autor Laurin
 */
 void fillData(DataElement* toFill) {
+    //generate data for DataElement
     char bezArray[4];
 
     for (int i = 0; i < 3; i++)
@@ -258,6 +260,7 @@ void fillData(DataElement* toFill) {
     @Autor Laurin
 */
 void deleteList(ListElement* pToDelete) {
+    //delete the entire list
     ListElement* pTemporary = pToDelete;
     while (pTemporary != NULL) {
         pToDelete = pTemporary;
@@ -309,6 +312,7 @@ void printList(ListElement* firstElement, int ElementsToPrintPerIteration) {
     @autor Laurin
 */
 bool isYes(char* inputstring) {
+    //check if the string that was put in is one of the characters below
     if (*inputstring == 'Y' ||
         *inputstring == 'J' ||
         *inputstring == 'y' ||
@@ -339,7 +343,7 @@ int getIntFromUser(const char* messageToUser, bool allowNegative) {
     @autor Laurin
 */
 void L_QS_Swap(Data** a, Data** b)
-{
+{   //swap current element with previous element
     Data* temp = *a;
     *a = *b;
     *b = temp;
@@ -350,7 +354,8 @@ void L_QS_Swap(Data** a, Data** b)
 */
 ListElement* L_QS_LastELement(ListElement* root)
 {
-    while (root && root->pNext)
+    //get last node of the linked list 
+    while (root && root->pNext) // (root != NULL && root->pNext != NULL)
         root = root->pNext;
     return root;
 }
@@ -360,6 +365,7 @@ ListElement* L_QS_LastELement(ListElement* root)
 */
 ListElement* L_QS_Partition(ListElement* low, ListElement* high)
 {
+    //algorythm for swaping elements 
     int  pivot = high->pData->mapped;
 
     ListElement* iteratror = low->pLast;
@@ -383,6 +389,7 @@ ListElement* L_QS_Partition(ListElement* low, ListElement* high)
 */
 void L_QS__quickSort(ListElement* low, ListElement* high)
 {
+    //recursiv quicksort call
     if (high != NULL && low != high && low != high->pNext)
     {
         ListElement* p = L_QS_Partition(low, high);
@@ -395,8 +402,8 @@ void L_QS__quickSort(ListElement* low, ListElement* high)
     @autor Laurin
 */
 void L_QS_quickSort(ListElement* head) {
+    //quicksort initialisation
     ListElement* h = L_QS_LastELement(head);
-
     L_QS__quickSort(head, h);
 }
 
@@ -449,10 +456,10 @@ void N_MS_Split(ListElement* source,
   @autor Nicola
 */
 ListElement* N_MS_SortedMerge(ListElement* a, ListElement* b) {
-
+    
     ListElement* result = NULL;
 
-
+    // Gets the element with the Bigger Number and sets it as Result
     if (a->pData->mapped > b->pData->mapped) {
         result = a;
         a = a->pNext;
@@ -464,9 +471,9 @@ ListElement* N_MS_SortedMerge(ListElement* a, ListElement* b) {
     }
     ListElement* current = result;
 
-    while (a != NULL && b != NULL)
+    while (a != NULL && b != NULL)// Until one List is at the end
     {
-        if (a->pData->mapped > b->pData->mapped) {
+        if (a->pData->mapped > b->pData->mapped) { // Always Appends Element with the Bigger mapped value
 
             current->pNext = a;
             current = a;
@@ -479,10 +486,11 @@ ListElement* N_MS_SortedMerge(ListElement* a, ListElement* b) {
             b = b->pNext;
         }
     }
+    // Appends the List wich has Conntent left to the Result list
     if (a == NULL)
         current->pNext = b;
     else if (b == NULL)
         current->pNext = a;
 
-    return result;
+    return result; // Returns the Result list
 }
