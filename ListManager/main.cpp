@@ -21,7 +21,7 @@ typedef struct Elm {
     struct Data* pData;
     // This may only be used for Quciksort
     struct Elm* pLast;
-} ListElement;
+} ListElement;  
 
 /*
     Prototypes
@@ -149,6 +149,7 @@ ListElement* createLinkedList(int listSize) {
         }
         pPreviousElement = pListElement;
     }
+    pPreviousElement->pLast = NULL;
     return pPreviousElement;
 }
 
@@ -308,22 +309,6 @@ int getIntFromUser(const char* messageToUser, bool allowNegative) {
 /*
     @autor Laurin
 */
-int getIntFromUser(const char* messageToUser, bool allowNegative) {
-    while (true) {
-        printf(messageToUser);
-        char input[100];
-        fgets(input, 100, stdin);
-        int userInt = atoi(input);
-        if (userInt != 0 && (allowNegative || userInt > 0))
-            return userInt;
-
-    }
-
-}
-
-/*
-    @autor Laurin
-*/
 void L_QS_Swap(Data** a, Data** b)
 {
     Data* temp = *a;
@@ -346,14 +331,14 @@ ListElement* L_QS_LastELement(ListElement* root)
 */
 ListElement* L_QS_Partition(ListElement* low, ListElement* high)
 {
-    Data* pivot = high->pData; 
+    int  pivot = high->pData->mapped; 
 
     ListElement* iteratror = low->pLast;
 
     for (ListElement* j = low; j != high; j = j->pNext)
     {
         // If current element is smaller than the pivot 
-        if (j->pData <= pivot) 
+        if (j->pData->mapped <= pivot) 
         {
             iteratror = (iteratror == NULL) ? low : iteratror->pNext; 
             L_QS_Swap(&(iteratror->pData), &(j->pData));
