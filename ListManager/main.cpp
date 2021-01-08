@@ -71,6 +71,10 @@ int main() {
             }
 
             pStartOfTheList = createLinkedList(getIntFromUser("Wie viele elemente soll die Liste haben ?\n", false));
+            if (pStartOfTheList == NULL) {
+                printf("Fehler beim Erstellen der Liste\n");
+                continue;
+            }
             printf("Liste wurde erstellt.\n");
             continue;
 
@@ -135,7 +139,10 @@ ListElement* createLinkedList(int listSize) {
     for (int i = 0; i < listSize; i++) {
         ListElement* pListElement = (ListElement*)malloc(sizeof(ListElement));
         DataElement* pDataElement = (DataElement*)malloc(sizeof(DataElement));
-        if (pListElement == NULL || pDataElement == NULL) return NULL;
+        if (pListElement == NULL || pDataElement == NULL) {
+            deleteList(pPreviousElement);
+            return NULL;
+        }
         fillData(pDataElement);
         pListElement->pData = pDataElement;
         pListElement->pNext = pPreviousElement;
