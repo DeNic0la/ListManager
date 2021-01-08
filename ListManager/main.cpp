@@ -32,6 +32,11 @@ void deleteList(ListElement* pToDelete);
 void printList(ListElement* firstElement, int ElementsToPrintPerIteration);
 bool isYes(char* inputstring);
 int getIntFromUser(const char* messageToUser, bool allowNegative);
+void L_QS_Swap(Data* a, Data* b);
+ListElement* L_QS_LastELement(ListElement* root);
+ListElement* L_QS_Partition(ListElement* low, ListElement* high);
+void L_QS__quickSort(ListElement* low, ListElement* high);
+void L_QS_quickSort(ListElement* head);
 void N_MS_SortList(ListElement** firstElement);
 void N_MS_Split(ListElement* source, ListElement** start, ListElement** mid);
 ListElement* N_MS_SortedMerge(ListElement* a, ListElement* B);
@@ -319,9 +324,9 @@ int getIntFromUser(const char* messageToUser, bool allowNegative) {
 /*
     @autor Laurin
 */
-void L_QS_Swap(Data* a, Data* b)
+void L_QS_Swap(Data** a, Data** b)
 {
-    Data temp = *a;
+    Data* temp = *a;
     *a = *b;
     *b = temp;
 }
@@ -351,11 +356,11 @@ ListElement* L_QS_Partition(ListElement* low, ListElement* high)
         if (j->pData <= pivot) 
         {
             iteratror = (iteratror == NULL) ? low : iteratror->pNext; 
-            L_QS_Swap(iteratror->pData, j->pData);
+            L_QS_Swap(&(iteratror->pData), &(j->pData));
         }
     }
     iteratror = (iteratror == NULL) ? low : iteratror->pNext;
-    L_QS_Swap(iteratror->pData, high->pData);
+    L_QS_Swap(&(iteratror->pData), &(high->pData));
     return iteratror;
 }
 
