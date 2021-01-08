@@ -85,7 +85,7 @@ int main() {
             while (sort > 4 || sort < 1)
             {
                 sort = getIntFromUser("Wie Soll sortiert werden ? \n1 = Bez - A-Z\n2 = Bez - Z-A\n3 = Preis - Aufsteigend\n4 = Preis - Absteigend\n", false);
-            }            
+            }
             clock_t startZeit = clock();
             mapInt(pStartOfTheList, sort);
             switch (algorythm) {
@@ -95,7 +95,7 @@ int main() {
             case 2:
                 printf("Hey Laurin du chasch do inne 1 Function call mache, lueg wie ich s bi Case 1 gmacht han und machs s done glich");
                 break;
-            }            
+            }
             clock_t endZeit = clock();
             double dauer = ((double)endZeit - (double)startZeit) / (double)CLOCKS_PER_SEC;
             printf("Die Sortierung ist beendet und dauerte %.5lf Sekunden\n", dauer);
@@ -151,48 +151,48 @@ ListElement* createLinkedList(int listSize) {
     @autor Nicola
 */
 void mapInt(ListElement* firstElement, int sortType) { // TODO: Performance Test betwen - and ~
-   
-        switch (sortType)
-        {
-            /*
-            * SortType
-                1= Bez - A-Z
-                2= Bez - Z-A
-                3= Preis - Aufsteigend
-                4= Preis - Absteigend
-            */
-        case 1:
-            while (firstElement != NULL) {
-                DataElement * element = firstElement->pData;
-                element->mapped = -((element->Bez[0] << 16) + (element->Bez[1] << 8) + (element->Bez[2]));
-                firstElement = firstElement->pNext;
-            }
-            break;
-        case 2:
-            while (firstElement != NULL) {
-                DataElement* element = firstElement->pData;
-                element->mapped = (element->Bez[0] << 16) + (element->Bez[1] << 8) + (element->Bez[2]);
-                firstElement = firstElement->pNext;
-            }
-            break;
-        case 3:
-            while (firstElement != NULL) {
-                DataElement* element = firstElement->pData;
-                element->mapped = -((int)(element->Preis*10));
-                firstElement = firstElement->pNext;
-            }
-            break;
-        case 4:
-            while (firstElement != NULL) {
-                DataElement* element = firstElement->pData;
-                element->mapped = ((int)(element->Preis * 10));
-                firstElement = firstElement->pNext;
-            }
-            break;
-        default:
-            break;
-        }       
-    
+
+    switch (sortType)
+    {
+        /*
+        * SortType
+            1= Bez - A-Z
+            2= Bez - Z-A
+            3= Preis - Aufsteigend
+            4= Preis - Absteigend
+        */
+    case 1:
+        while (firstElement != NULL) {
+            DataElement* element = firstElement->pData;
+            element->mapped = -((element->Bez[0] << 16) + (element->Bez[1] << 8) + (element->Bez[2]));
+            firstElement = firstElement->pNext;
+        }
+        break;
+    case 2:
+        while (firstElement != NULL) {
+            DataElement* element = firstElement->pData;
+            element->mapped = (element->Bez[0] << 16) + (element->Bez[1] << 8) + (element->Bez[2]);
+            firstElement = firstElement->pNext;
+        }
+        break;
+    case 3:
+        while (firstElement != NULL) {
+            DataElement* element = firstElement->pData;
+            element->mapped = -((int)(element->Preis * 10));
+            firstElement = firstElement->pNext;
+        }
+        break;
+    case 4:
+        while (firstElement != NULL) {
+            DataElement* element = firstElement->pData;
+            element->mapped = ((int)(element->Preis * 10));
+            firstElement = firstElement->pNext;
+        }
+        break;
+    default:
+        break;
+    }
+
 }
 
 /*
