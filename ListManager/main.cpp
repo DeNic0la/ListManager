@@ -21,7 +21,7 @@ typedef struct Elm {
     struct Data* pData;
     // This may only be used for Quciksort
     struct Elm* pLast;
-} ListElement;
+} ListElement;  
 
 /*
     Prototypes
@@ -32,6 +32,11 @@ void deleteList(ListElement* pToDelete);
 void printList(ListElement* firstElement, int ElementsToPrintPerIteration);
 bool isYes(char* inputstring);
 int getIntFromUser(const char* messageToUser, bool allowNegative);
+void L_QS_Swap(Data* a, Data* b);
+ListElement* L_QS_LastELement(ListElement* root);
+ListElement* L_QS_Partition(ListElement* low, ListElement* high);
+void L_QS__quickSort(ListElement* low, ListElement* high);
+void L_QS_quickSort(ListElement* head);
 void N_MS_SortList(ListElement** firstElement);
 void N_MS_Split(ListElement* source, ListElement** start, ListElement** mid);
 ListElement* N_MS_SortedMerge(ListElement* a, ListElement* B);
@@ -97,7 +102,7 @@ int main() {
                 N_MS_SortList(&pStartOfTheList);
                 break;
             case 2:
-                printf("Hey Laurin du chasch do inne 1 Function call mache, lueg wie ich s bi Case 1 gmacht han und machs s done glich");
+                L_QS_quickSort(pStartOfTheList);
                 break;
             }
             clock_t endZeit = clock();
@@ -151,6 +156,7 @@ ListElement* createLinkedList(int listSize) {
         }
         pPreviousElement = pListElement;
     }
+    pPreviousElement->pLast = NULL;
     return pPreviousElement;
 }
 
@@ -305,6 +311,68 @@ int getIntFromUser(const char* messageToUser, bool allowNegative) {
 
     }
 
+}
+
+/*
+    @autor Laurin
+*/
+void L_QS_Swap(Data** a, Data** b)
+{
+    Data* temp = *a;
+    *a = *b;
+    *b = temp;
+}
+
+/*
+    @autor Laurin
+*/
+ListElement* L_QS_LastELement(ListElement* root)
+{
+    while (root && root->pNext)
+        root = root->pNext;
+    return root;
+}
+
+/*
+    @autor Laurin
+*/
+ListElement* L_QS_Partition(ListElement* low, ListElement* high)
+{
+    int  pivot = high->pData->mapped; 
+
+    ListElement* iteratror = low->pLast;
+
+    for (ListElement* j = low; j != high; j = j->pNext)
+    {
+        // If current element is smaller than the pivot 
+        if (j->pData->mapped <= pivot) 
+        {
+            iteratror = (iteratror == NULL) ? low : iteratror->pNext; 
+            L_QS_Swap(&(iteratror->pData), &(j->pData));
+        }
+    }
+    iteratror = (iteratror == NULL) ? low : iteratror->pNext;
+    L_QS_Swap(&(iteratror->pData), &(high->pData));
+    return iteratror;
+}
+
+/*
+    @autor Laurin
+*/
+void L_QS__quickSort(ListElement* low, ListElement* high)
+{
+    if (high != NULL && low != high && low != high->pNext)
+    {
+        ListElement* p = L_QS_Partition(low, high);
+        L_QS__quickSort(low, p->pLast);
+        L_QS__quickSort(p->pNext, high);
+    }
+}
+
+void L_QS_quickSort(ListElement* head) {
+    ListElement* h = L_QS_LastELement(head);
+
+    L_QS__quickSort(head, h);
 }
 
 /*
