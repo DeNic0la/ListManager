@@ -40,7 +40,6 @@ void L_QS_quickSort(ListElement* head);
 void N_MS_SortList(ListElement** firstElement);
 void N_MS_Split(ListElement* source, ListElement** start, ListElement** mid);
 ListElement* N_MS_SortedMerge(ListElement* a, ListElement* B);
-int getShiftedChar(char* pStart);
 void mapInt(ListElement* firstElement, int sortType);
 
 
