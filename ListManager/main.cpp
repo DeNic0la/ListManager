@@ -21,7 +21,7 @@ typedef struct Elm {
     struct Data* pData;
     // This may only be used for Quciksort
     struct Elm* pLast;
-} ListElement;  
+} ListElement;
 
 /*
     Prototypes
@@ -47,7 +47,7 @@ void mapInt(ListElement* firstElement, int sortType);
 
 /*
     @autor Nicola
-    @autor --
+    @autor (Laurin)
 */
 int main() {
     printf("Das Programm List-Manager wurde gestartet. Fuer Hilfe benuetzen sie den Command 'help'\n");
@@ -135,7 +135,6 @@ int main() {
 }
 
 /*
-    This is one of the 5 Base Functionality Functions
     @autor Nicola
     The list is Built Back to Front
 */
@@ -163,7 +162,7 @@ ListElement* createLinkedList(int listSize) {
 /*
     @autor Nicola
 */
-void mapInt(ListElement* firstElement, int sortType) { // TODO: Performance Test betwen - and ~
+void mapInt(ListElement* firstElement, int sortType) {
 
     switch (sortType)
     {
@@ -210,7 +209,6 @@ void mapInt(ListElement* firstElement, int sortType) { // TODO: Performance Test
 
 /*
     @Autor Laurin
-    kinda necessary
 */
 int generateRandomInt(int min, int max) {
     return (rand() % (max - min + 1)) + min;
@@ -237,7 +235,6 @@ void fillData(DataElement* toFill) {
 
 /*
     @Autor Laurin
-    Antoher one of The 5 Core Functionalty Functions
 */
 void deleteList(ListElement* pToDelete) {
     ListElement* pTemporary = pToDelete;
@@ -298,7 +295,7 @@ bool isYes(char* inputstring) {
 }
 
 /*
-    @autor Laurin
+    @autor Nicola
 */
 int getIntFromUser(const char* messageToUser, bool allowNegative) {
     while (true) {
@@ -338,16 +335,16 @@ ListElement* L_QS_LastELement(ListElement* root)
 */
 ListElement* L_QS_Partition(ListElement* low, ListElement* high)
 {
-    int  pivot = high->pData->mapped; 
+    int  pivot = high->pData->mapped;
 
     ListElement* iteratror = low->pLast;
 
     for (ListElement* j = low; j != high; j = j->pNext)
     {
         // If current element is smaller than the pivot 
-        if (j->pData->mapped <= pivot) 
+        if (j->pData->mapped <= pivot)
         {
-            iteratror = (iteratror == NULL) ? low : iteratror->pNext; 
+            iteratror = (iteratror == NULL) ? low : iteratror->pNext;
             L_QS_Swap(&(iteratror->pData), &(j->pData));
         }
     }
@@ -369,6 +366,9 @@ void L_QS__quickSort(ListElement* low, ListElement* high)
     }
 }
 
+/*
+    @autor Laurin
+*/
 void L_QS_quickSort(ListElement* head) {
     ListElement* h = L_QS_LastELement(head);
 
@@ -416,6 +416,9 @@ void N_MS_Split(ListElement* source,
     slow->pNext = NULL;
 }
 
+/*
+  @autor Nicola
+*/
 ListElement* N_MS_SortedMerge(ListElement* a, ListElement* b) {
 
     ListElement* result = NULL;
